@@ -277,7 +277,6 @@ class BaseWebDriver(DriverAPI):
 
 class TypeIterator(object):
 
-
     def __init__(self, element, keys):
         self._element = element
         self._keys = keys
