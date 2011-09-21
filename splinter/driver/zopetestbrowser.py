@@ -2,7 +2,6 @@ from lxml.cssselect import CSSSelector
 from zope.testbrowser.browser import Browser
 from splinter.element_list import ElementList
 from splinter.driver import DriverAPI, ElementAPI
-from splinter.utils import warn_deprecated
 from splinter.cookie_manager import CookieManagerAPI
 
 import mimetypes
@@ -37,6 +36,8 @@ class CookieManager(CookieManagerAPI):
 
 
 class ZopeTestBrowser(DriverAPI):
+
+    driver_name = "zope.testbrowser"
 
     def __init__(self):
         self._browser = Browser()
@@ -89,8 +90,6 @@ class ZopeTestBrowser(DriverAPI):
     def find_by_css(self, selector):
         xpath = CSSSelector(selector).path
         return self.find_by_xpath(xpath, original_find="css", original_selector=selector)
-
-    find_by_css_selector = warn_deprecated(find_by_css, 'find_by_css_selector')
 
     def find_by_xpath(self, xpath, original_find=None, original_selector=None):
         html = lxml.html.fromstring(self.html)
@@ -146,8 +145,6 @@ class ZopeTestBrowser(DriverAPI):
 
     def fill(self, name, value):
         self.find_by_name(name=name).first._control.value = value
-
-    fill_in = warn_deprecated(fill, 'fill_in')
 
     def choose(self, name, value):
         control = self._browser.getControl(name=name)

@@ -103,12 +103,8 @@ class BaseWebDriver(DriverAPI):
     def is_element_present_by_css(self, css_selector, wait_time=None):
         return self.is_element_present(self.find_by_css, css_selector, wait_time)
 
-    is_element_present_by_css_selector = warn_deprecated(is_element_present_by_css, 'is_element_present_by_css_selector')
-
     def is_element_not_present_by_css(self, css_selector, wait_time=None):
         return self.is_element_not_present(self.find_by_css, css_selector, wait_time)
-
-    is_element_not_present_by_css_selector = warn_deprecated(is_element_not_present_by_css, 'is_element_not_present_by_css_selector')
 
     def is_element_present_by_xpath(self, xpath, wait_time=None):
         return self.is_element_present(self.find_by_xpath, xpath, wait_time)
@@ -216,8 +212,6 @@ class BaseWebDriver(DriverAPI):
         selector = CSSSelector(css_selector)
         return self.find_by(self.driver.find_elements_by_xpath, selector.path, original_find='css', original_query=css_selector)
 
-    find_by_css_selector = warn_deprecated(find_by_css, 'find_by_css_selector')
-
     def find_by_xpath(self, xpath, original_find=None, original_query=None):
         original_find = original_find or "xpath"
         original_query = original_query or xpath
@@ -239,7 +233,6 @@ class BaseWebDriver(DriverAPI):
         field = self.find_by_name(name).first
         field.value = value
 
-    fill_in = warn_deprecated(fill, 'fill_in')
     attach_file = fill
 
     def type(self, name, value, slowly=False):
@@ -360,7 +353,7 @@ class WebDriverElement(ElementAPI):
         elements = ElementList(self._element.find_elements_by_id(id))
         return ElementList([self.__class__(element, self.parent) for element in elements], find_by='id', query=id)
 
-    def mouseover(self):
+    def mouse_over(self):
         """
         Performs a mouse over the element.
 
@@ -369,7 +362,7 @@ class WebDriverElement(ElementAPI):
         self.action_chains.move_to_element(self._element)
         self.action_chains.perform()
 
-    def mouseout(self):
+    def mouse_out(self):
         """
         Performs a mouse out the element.
 
@@ -378,6 +371,9 @@ class WebDriverElement(ElementAPI):
         self.action_chains.move_by_offset(5000, 5000)
         self.action_chains.perform()
 
+    mouseover = warn_deprecated(mouse_over, 'mouseover')
+    mouseout = warn_deprecated(mouse_out, 'mouseout')
+
     def double_click(self):
         """
         Performs a double click in the element.
@@ -385,6 +381,24 @@ class WebDriverElement(ElementAPI):
         Currently works only on Chrome driver.
         """
         self.action_chains.double_click(self._element)
+        self.action_chains.perform()
+
+    def right_click(self):
+        """
+        Performs a right click in the element.
+
+        Currently works only on Chrome driver.
+        """
+        self.action_chains.context_click(self._element)
+        self.action_chains.perform()
+
+    def drag_and_drop(self, droppable):
+        """
+        Performs drag a element to another elmenet.
+
+        Currently works only on Chrome driver.
+        """
+        self.action_chains.drag_and_drop(self._element, droppable._element)
         self.action_chains.perform()
 
     def __getitem__(self, attr):
