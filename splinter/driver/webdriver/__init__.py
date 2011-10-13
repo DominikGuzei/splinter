@@ -56,6 +56,8 @@ class BaseWebDriver(DriverAPI):
 
     @property
     def html(self):
+        # supposed to fix selenium problems with firefox
+        self.driver.switch_to_default_content()
         return self.driver.page_source
 
     @property
