@@ -65,6 +65,9 @@ class BaseWebDriver(DriverAPI):
     def visit(self, url):
         self.connect(url)
         self.ensure_success_response()
+        
+        # supposed to fix selenium problems with firefox
+        self.driver.switch_to_default_content()
         self.driver.get(url)
 
     def back(self):
@@ -188,7 +191,7 @@ class BaseWebDriver(DriverAPI):
     def find_link_by_text(self, text):
         return ElementList([self.element_class(element, self) for element in self.driver.find_elements_by_link_text(text)], find_by="link by text", query=text)
 
-    def find_by(self, finder, selector, original_find=None, original_query=None):
+    def find_by(self, finder, selector, original_find=None, original_query=None):        
         elements = None
         end_time = time.time() + self.wait_time
 
@@ -198,6 +201,11 @@ class BaseWebDriver(DriverAPI):
 
         while time.time() < end_time:
             try:
+                # selenium throws weird exceptions in firefox 4+
+                # this is supposed to be a workaround
+                
+                self.driver.switch_to_default_content()
+                
                 elements = finder(selector)
                 if not isinstance(elements, list):
                     elements = [elements]
