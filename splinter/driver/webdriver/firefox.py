@@ -28,7 +28,7 @@ class WebDriver(BaseWebDriver):
 
         self._cookie_manager = CookieManager(self.driver)
 
-        super(WebDriver, self).__init__(wait_time=5)
+        super(WebDriver, self).__init__(wait_time=default_wait_time)
 
 
 class WebDriverElement(BaseWebDriverElement):
